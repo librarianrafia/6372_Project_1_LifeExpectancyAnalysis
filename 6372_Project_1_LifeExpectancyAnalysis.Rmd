@@ -1,0 +1,1412 @@
+---
+title: "Project-1-6372- Life Expectancy Analysis"
+author: "Jessica McPhaul, Ivan Chavez, Rafia Mirza"
+date: "2024-02-11"
+output:
+  pdf_document: 
+    latex_engine: xelatex
+    keep_tex: true
+  html_document: default
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+
+
+
+<a href="https://rpubs.com/Texaschikkita/Project_1_6372" target="_blank">Link2Project</a>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+##RPubs
+[RPubs](https://rpubs.com/Texaschikkita/Project_1_6372)
+
+
+
+## Introduction and Objective
+
+This project focuses on the analysis of life expectancy using WHO data to model country life expectancy based on economic and health factors using regression models. The primary aim is to explore key relationships using regression analysis and interpret these in a structured manner.
+
+## Data Description and Processing
+
+Data from WHO covering health and economic indicators were used. The dataset includes 2,848 records, each representing annual health and economic indicators for various countries. Variables such as Life Expectancy, Adult Mortality, Alcohol Consumption, GDP per Capita, and others were included. Preprocessing involved handling missing values, eliminating columns with a substantial number of missing values, and standardizing column names.
+
+## Exploratory Data Analysis (EDA)
+
+EDA revealed patterns and correlations. Key visualizations include box plots showing life expectancy variation by economy status and time, and correlation matrices. Scatter plots of selected variables against life expectancy were also used. These analyses provided foundational insights for model building.
+
+## Objective 1: Regression Model Development and Analysis
+
+1. **Model Fitting Approach:** Enhanced linear model with iterative refinement process, emphasizing statistically significant variables.
+2. **Variable Selection:** Based on statistical significance and EDA, with notable predictors including Adult Mortality, BMI, and GDP per Capita.
+3. **Feature Selection Summary:** Manual selection and statistical techniques ensured inclusion of significant predictors.
+4. **Final Regression Model Definition:** Incorporated predictors like Adult Mortality, Alcohol Consumption, GDP per Capita, etc.
+5. **Coefficients Summary Table:** Provided estimates, standard errors, and significance levels for each predictor.
+6. **Regression Coefficient Interpretation:** Interpretations focused on magnitude and significance of key coefficients.
+7. **Model Evaluation and Comparison:** Employed visualizations and statistical analyses like ANOVA for evaluation.
+
+## Objective 2: Further Model Evaluation and Comparative Analysis
+
+Evaluation and comparison of different regression models for life expectancy prediction, with a focus on predictive accuracy and suitability.
+
+1. **Advanced Model Development and Iterative EDA:** Increased complexity of the model with sophisticated techniques and ongoing EDA.
+2. **In-Depth Model Refinement:** Continuous integration of complex terms into the model based on EDA insights.
+
+## Methodology and Decision Making
+
+1. **Comprehensive Model Comparison:** Included enhanced linear models and nonparametric models like Random Forest or KNN.
+2. **Extended Model Evaluation Metrics:** Employed MSE, R-squared/Adjusted R-squared, AIC, BIC, etc.
+3. **Detailed Comparative Analysis and Final Recommendations:** Focused on performance, strengths, and limitations of models in the context of life expectancy prediction.
+4. **Key Focuses of Our Approach:** Included iterative process, balance and flexibility, and data-driven decision-making.
+
+## Conclusion
+
+Model_1 was identified as the best model for our analysis. RFE, VIF, AIC/BIC/MSE/RMSE/MAE/ANOVA/MANOVA processes were used to train, test, and validate the models.
+
+---
+
+
+# Part A: Initial Exploration & Introduction to Dataset
+
+## Dataset Composition
+- **Observations:** 2,848 entries spanning from 2000 to 2015.
+- **Variables:** 23, including both health-related and economic indicators.
+- **Data Types:** Combination of categorical (Country, Region) and numerical (health indicators, economic measures).
+- **Year Coverage:** Data spans from 2000 to 2015, median and mean year of 2008.
+- **Country and Region:** 2,848 entries for each, showcasing geographical diversity.
+- **Metrics:** Include economy status (developed: 1, undeveloped: 0), GDP per capita, population, income composition, and schooling years.
+
+## Key Data Findings
+### Health Variables
+1. **Life Expectancy:** Ranges from 39.4 to 83.8 years (Median: 71.45 years).
+2. **Adult Mortality:** Median rate of 144 per 1000, range: 49.38 to 719.36.
+3. **Alcohol Consumption:** Ranges from 0 to 17.87 liters/person/year (Average: 4.83 liters).
+4. **Infant Deaths:** Minimum 1.8, maximum 138.1 per 1000 live births (Mean: 30.08).
+5. **Vaccination Rates (Polio, Hepatitis B):** Range from 0% to 99%.
+6. **Measles Cases:** 0 to 212,183 cases, indicating high variance.
+7. **BMI:** Range from 0 to 79.3.
+8. **Under-Five Deaths:** 0 to 2500 deaths.
+9. **Diphtheria Vaccination Rate:** Range from 0% to 99%.
+10. **HIV Incidence:** 0 to 43.5 cases per 1000 live births.
+11. **Thinness in Teens/Children:** Maximum values at 27.7% and 28.6%.
+
+### Economic Indicators
+1. **GDP Per Capita:** $255 to $118,514.
+2. **Healthcare Expenditure:** Wide variation, correlated with GDP.
+3. **Schooling Years:** 0 to 20 years (Average: 12 years).
+4. **Health Expenditure (% of GDP):** 0% to 17.6%.
+5. **GDP per Capita:** 0 to 119,172.7 USD.
+6. **Population:** 0 to ~1.29 billion.
+7. **Income Composition/Schooling:** 0 to 0.948 and 1.1 to 14.1 years, respectively.
+8. **Economy Status (Developed):** 20.79% of entries from developed economies.
+
+## Data Cleaning Process
+- **Missing Data:** Imputed with median for numerical (e.g., median GDP $5,962) and mode for categorical.
+- **Data Completeness:** All 23 variables retained post-cleaning.
+
+## Overview
+- The dataset comprises a diverse range of health indicators and socio-economic factors across various countries and regions from 2000 to 2015.
+- Numerical variables cover a wide array of data points including year, economic status, life expectancy, adult mortality rates, and more.
+
+## Key Statistics
+- **Life Expectancy:** Median of 71.45 years, with a broad range.
+- **Adult Mortality Rates:** Median of 163.28, maximum of 719.36.
+- **Alcohol Consumption:** Average of 4.83 liters, demonstrating wide variability.
+- **Economic Diversity:** Reflected in disparities in healthcare expenditure and GDP per capita.
+- **Nutritional Status:** Indicated by a broad range of BMI values.
+- **Health Outcomes:** Including infant/under-five deaths and disease incidences.
+- **Socio-Economic Factors:** Like income composition and schooling, crucial for assessing development impacts on health.
+
+## Data Readiness
+- **Insight Potential:** The dataset is well-suited for trend analysis and predictive modeling, given its diversity in health outcomes and economic statuses.
+
+## In Summary
+- The dataset provides a comprehensive view of health and economic indicators across a diverse set of countries and regions, highlighting variations in life expectancy, mortality rates, disease prevalence, vaccination rates, health expenditures, and socio-economic factors over a 15-year period.
+
+#### 1. Library Optimization
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(corrplot)
+library(htmlwidgets)
+library(caret)
+library(randomForest)
+library(kernlab)
+library(MASS)
+library(lattice)
+library(openxlsx)
+library(jsonlite)
+library(car)
+library(broom)
+library(tidyr)
+library(tidyverse)
+library(webshot)
+library(webshot2)
+library(lattice)
+library(car)
+library(nnet) # for ANN
+library(class) # for KNN
+library(e1071) # for SVM
+library(randomForest) # for RF
+library(glmnet)
+library(name)
+
+```
+
+
+#### 2. Data Loading 
+
+
+```{r}
+
+data <- read_csv("lifev3.csv")
+# Define a mode function for categorical imputation
+mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+} # Closing bracket added here
+
+# Impute missing values
+data <- data %>%
+  mutate_if(is.numeric, ~ifelse(is.na(.), median(., na.rm = TRUE), .)) %>%  # Impute numerical columns with median
+  mutate_if(is.character, ~ifelse(is.na(.), mode(.), .))  # Impute categorical columns with mode
+
+# 5. Drop columns with many missing values if needed
+data <- data[ , !(names(data) %in% c("ColumnsWithTooManyNAs"))]
+
+# 6. Check result
+summary(data)
+
+# 7. List all column names to verify the existence of 'Status'
+colnames(data)
+```
+
+
+# Part B: Data Visualization
+
+## Overview Data Preparation, Cleaning & Visualization in Part B:
+Methodology: Imputed missing values; ensured robust dataset ready for analysis.
+Visualization Techniques:
+
+Strategies Used: Utilized ggplot2 and plotly for rich, interactive data visualizations.
+Key Visualizations:
+
+Types and Insights:
+
+1. Economic Status and Life Expectancy
+    Analyzed life expectancy differences between developed and undeveloped economies.
+    Boxplot Findings: Developed countries (label '1') show higher and less variable life expectancy than developing ones (label '0').
+        Revealed disparities in life expectancy between developed and undeveloped economies.
+
+2. Correlation Analysis
+    Strong Positive Correlations: GDP per capita with schooling.
+    Strong Negative Correlations: Adult mortality with life expectancy.
+    Weaker Correlations: Indicated by lighter colors in the correlation matrix.
+        Showed strong positive and negative correlations between various health and economic factors.
+
+3. Life Expectancy Trends and Relationships
+    Trends Over Time: General upward trend in life expectancy over years.
+        Bivariate Relationships: Explored through scatterplots for key factors like adult mortality and GDP per capita.
+
+4. Interactive Visualization
+    Utilized plotly for dynamic exploration of data, especially in regional life expectancy trends.
+
+5.  Common Value Determination: A function was developed to find the most common value (mode) in a column, aiding in imputing missing categorical data.
+6.  Imputation of Missing Values: Missing numerical values were imputed with the median of their respective columns, avoiding bias from mean values affected by outliers.
+7.  Removal of Excessively Incomplete Columns: To maintain analysis quality, columns with too many missing values were removed.
+8.  Data Structure Verification: Post-cleaning, the dataset's structure and key columns were confirmed as analysis-ready.
+
+9.  Data Visualization and Analysis
+    a.  Status Column Conversion and Boxplot: The 'Economy_status_Developed' column was converted to a factor for categorical plotting. A boxplot was created to visualize life              expectancy distribution by economic status, revealing significant differences.
+    b.  Correlation Matrix: A static and then interactive correlation matrix were plotted to investigate relationships between all numeric variables, highlighting those strongly            associated with life expectancy, like adult mortality and schooling.
+    c.  Life Expectancy Over Time: A plot of life expectancy trends over time by country was created, likely showing a general upward trend.
+    d.  Pairwise Scatterplots: These plots examined relationships between select variables like life expectancy, adult mortality, and GDP per capita.
+    e.  Interactive Boxplot with Faceting: Faceting life expectancy data by region and plotting over time enabled comparison of regional trends and disparities in life expectancy.
+
+10. Model Fitting and Evaluation
+    a.  Regression Model Construction: Multiple regression models were built and compared for predicting life expectancy.
+    b.  Model Evaluation: Models were evaluated using criteria like AIC and BIC, with lower values indicating better fit.
+    c.  Residual Analysis: Residuals were analyzed for patterns suggesting model fit issues, like non-linearity or heteroscedasticity.
+
+11. Interactive Visualizations
+    a.  Enhancement to Interactivity: Static ggplot objects were transformed into interactive Plotly visualizations for an engaging data exploration experience.
+    b.  Transformation of Static Plots: Static ggplot objects were converted into interactive Plotly visualizations. This enhanced user engagement and information accessibility             through features like hover-over details, allowing for a more dynamic exploration of the data.
+12. Model Summaries
+    a.  Detailed Reporting: Summaries of regression models were provided, including coefficients, significance, and diagnostics, crucial for interpreting which variables                    significantly predict life expectancy.
+    b.  Regression Model Insights: Detailed summaries of regression models were provided. These included coefficients, statistical significance, and model diagnostics, essential for         understanding which variables significantly impact life expectancy.
+
+13. Specific Visualizations
+    a.  Boxplot of Life Expectancy: Displayed differences in life expectancy between two groups, with the group labeled '1' showing higher and less variable life expectancy than            '0'. 
+        This plot differentiated between two categories ('0' and '1'). The '0' category showed a broader range of life expectancy (40 to 80 years) with a median around 65 years and         some outliers indicating very low life expectancy. 
+        In contrast, the '1' category had a narrower and higher range of life expectancy (55 to just below 80 years) with a median around 75 years and no outliers, suggesting higher         and more consistent life expectancy in this group.
+
+    b.  Multiple Linear Regression Plots: A grid of scatter plots showing linear regressions between various variables.
+        These plots consisted of a grid of scatter plots, each showing a linear regression between two variables. 
+        Different traces in the plots indicated variations in subsets or categories within the data. 
+        The plots effectively displayed pairwise linear relationships among selected variables.
+        
+    c.  Life Expectancy Trends by Region: Line graphs for different global regions, showing life expectancy changes over time.
+        Line graphs for various global regions depicted life expectancy trends from 2000 to around 2019. 
+        Each line represented a different country within a region, illustrating both individual country trends and overall regional trends in life expectancy.
+        
+    d.  Correlation Heatmap: A heatmap displaying correlations between various health and socioeconomic indicators.
+        This heatmap displayed correlations between various health and socioeconomic indicators, using color intensity to represent the strength of these correlations. 
+        The range of colors from blue (negative correlation) to red (positive correlation) allowed for quick visual identification of the nature and strength of the relationships.
+        
+    e.  Life Expectancy Over Time by Country: A combined plot of all countries showing life expectancy trends.
+        Combining data from all countries, this plot showed life expectancy trends from 2000 to around 2015. 
+        Each line represented a different country, highlighting the variability and overall trajectories of life expectancy across nations.
+        
+    f.  Correlation Dot Matrix: A dot matrix emphasizing significant relationships with the size and color of dots.
+        Similar to the heatmap, this dot matrix also showed correlation coefficients between various indicators. The size and color of the dots 
+        (blue for positive, red for negative) emphasized the strength and nature of the correlations, making the most significant relationships more visually prominent.
+
+
+
+
+
+
+
+```{r}
+# 1. Status Column Conversion
+data$Economy_status_Developed <- as.factor(data$Economy_status_Developed)
+# 2. Plot the boxplot with the corrected column name
+gg_boxplot <- ggplot(data, aes(x = Economy_status_Developed, y = Life_expectancy)) + 
+  geom_boxplot() +
+  labs(title = "Boxplot of Life Expectancy by Economy Status",
+       x = "Economy Status", y = "Life Expectancy") +
+  theme_minimal()
+ggsave("life_expectancy_by_status.png", plot = gg_boxplot, width = 10, height = 6)
+
+# Convert to Plotly for interactive visualization
+p_plotly <- ggplotly(gg_boxplot)
+htmlwidgets::saveWidget(p_plotly, "Life_Expectancy_by_Status_Plotly.html")
+webshot::webshot("Life_Expectancy_by_Status_Plotly.html", file = "Life_Expectancy_by_Status_Plotly.png")
+
+# Convert to Plotly for interactive visualization
+p_plotly <- ggplotly(gg_boxplot)
+p_plotly
+
+# Plot static
+gg_boxplot <- ggplot(data, aes(x = Economy_status_Developed, y = Life_expectancy)) + 
+  geom_boxplot() +
+  labs(title = "Boxplot of Life Expectancy by Economy Status",
+       x = "Economy Status", y = "Life Expectancy") +
+  theme_minimal()
+ggsave("life_expectancy_by_status.png", plot = gg_boxplot, width = 10, height = 6)
+
+# Convert to Plotly for interactive visualization
+p_plotly <- ggplotly(gg_boxplot)
+htmlwidgets::saveWidget(p_plotly, "Life_Expectancy_by_Status_Plotly.html")
+
+
+#### 3. Correlation Matrix 
+# Static Correlation Matrix
+cor_matrix_static <- cor(data[, sapply(data, is.numeric)], use = "complete.obs")
+png("correlation_matrix.png", width = 800, height = 800, res = 150)
+corrplot::corrplot(cor_matrix_static, method = "circle")
+dev.off()
+
+# Interactive Correlation Matrix with Plotly
+cor_matrix_interactive <- cor(data %>% select_if(is.numeric), use = "complete.obs")
+p_corr <- plot_ly(x = colnames(cor_matrix_interactive), y = colnames(cor_matrix_interactive), z = cor_matrix_interactive, 
+                  type = "heatmap", colors = colorRamp(c("blue", "white", "red")))
+htmlwidgets::saveWidget(p_corr, "Correlation_Matrix_Plotly.html")
+webshot::webshot("Correlation_Matrix_Plotly.html", file = "Correlation_Matrix_Plotly.png")
+
+
+# Static Correlation Matrix
+cor_matrix_static <- cor(data[, sapply(data, is.numeric)], use = "complete.obs")
+corrplot(cor_matrix_static, method = "circle")
+
+
+
+# Interactive Correlation Matrix with Plotly
+cor_matrix_interactive <- cor(data %>% dplyr::select_if(is.numeric), use = "complete.obs")
+p_corr <- plot_ly(x = colnames(cor_matrix_interactive), y = colnames(cor_matrix_interactive), z = cor_matrix_interactive, 
+                  type = "heatmap", colors = colorRamp(c("blue", "white", "red")))
+
+# Embed Plotly plot directly
+p_corr
+
+# Life Expectancy Over Time
+
+gg_life_expectancy <- ggplot(data, aes(x = Year, y = Life_expectancy, group = Country, color = Country)) +
+  geom_line() +
+  labs(title = "Life Expectancy Over Time",
+       x = "Year", y = "Life Expectancy") +
+  theme_minimal()
+ggsave("life_expectancy_over_time.png", plot = gg_life_expectancy, width = 10, height = 6)
+
+# Convert to Plotly for interactive visualization
+p_plotly <- ggplotly(gg_life_expectancy)
+htmlwidgets::saveWidget(p_plotly, "Life_Expectancy_Over_Time_Plotly.html")
+webshot::webshot("Life_Expectancy_Over_Time_Plotly.html", file = "Life_Expectancy_Over_Time_Plotly.png")
+```
+
+```{r}
+# Convert to Plotly for interactive visualization
+p_life_expectancy <- ggplotly(gg_life_expectancy)
+p_life_expectancy
+
+
+
+#### 5. Pairwise Scatterplots
+select_vars <- c("Life_expectancy", "Adult_mortality", "Alcohol_consumption", "GDP_per_capita", "Schooling")
+png("Pairwise_Scatterplots.png", width = 1200, height = 800)
+pairs(data[select_vars])
+dev.off()
+
+
+# Convert to interactive Plotly scatter plot matrix
+p_pairwise <- plot_ly(data = data, type = "scatter", mode = "markers")
+for(i in 1:length(select_vars)) {
+  for(j in 1:length(select_vars)) {
+    if(i != j) {
+      p_pairwise <- add_trace(p_pairwise, x = ~data[[select_vars[i]]], y = ~data[[select_vars[j]]], 
+                              xaxis = paste0("x", i), yaxis = paste0("y", j))
+    }
+  }
+}
+p_pairwise <- p_pairwise %>% 
+  layout(grid = list(rows = length(select_vars), columns = length(select_vars)))
+p_pairwise
+
+
+
+#### 6. Interactive Boxplot with Faceting
+
+# Create a ggplot object with faceting
+gg_facet_plot <- ggplot(data, aes(x = Year, y = Life_expectancy, color = Country)) + 
+  geom_line() +
+  facet_wrap(~Region) +  # Replace 'Region' with your actual faceting variable
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# Convert to a Plotly object for interactivity
+p_facet_plotly <- ggplotly(gg_facet_plot)
+htmlwidgets::saveWidget(p_facet_plotly, "Life_Expectancy_Faceted_Plot.html")
+webshot::webshot("Life_Expectancy_Faceted_Plot.html", file = "Life_Expectancy_Faceted_Plot.png")
+
+
+# Convert to a Plotly object for interactivity
+p_facet_plotly <- ggplotly(gg_facet_plot)
+
+# Display the interactive plot
+p_facet_plotly
+
+```
+
+
+# Part C: Model Training
+##  Data Analysis & Findings From Part C:
+
+1. **Enhanced Linear Model (LM) Analysis**:
+   - The `enhanced_linear_model` shows a very high R-squared value of 0.9971, indicating that the model explains almost all the variability in life expectancy.
+   - The low residual standard error (0.5275) suggests good accuracy.
+   - However, with 197 predictors, the model could be overfitting.
+
+2. **Variance Inflation Factor (VIF) Analysis**:
+   - High VIFs in `vif_model_1` (e.g., Alcohol_consumption: 12.666473) suggest multicollinearity issues, which can distort the interpretation of coefficients.
+   - `vif_model_2` presents lower VIFs, indicating reduced multicollinearity for a simpler model.
+
+3. **Model 2 (Simpler LM) Analysis**:
+   - This model shows a lower but still strong R-squared of 0.9285.
+   - The RMSE for cross-validation (2.494402) and test data (2.644088) are quite consistent, indicating the model generalizes well.
+
+4. **Generalized Linear Model (GLM) Analysis**:
+   - The GLM with a logarithmic link function also performs well (AIC: 7849.5).
+   - Some coefficients (e.g., `Income composition of resources`: 6.039e-03) are significant, showing their impact on life expectancy.
+
+5. **Artificial Neural Network (ANN) Analysis**:
+   - The ANN model with 205 input features shows complexity in the weights, requiring careful interpretation.
+
+6. **K-Nearest Neighbors (KNN) Analysis**:
+   - The KNN model summary doesn't provide much detail, but it's important to choose the right 'k' value for optimal performance.
+
+7. **Support Vector Machine (SVM) Analysis**:
+   - The SVM model is another complex model, effective for capturing non-linear relationships.
+
+8. **Random Forest (RF) Analysis**:
+   - The RF model includes 500 trees and shows good performance in terms of mean squared error (MSE) and the coefficient of determination (R-squared).
+
+9. **Comparative Analysis**:
+   - Comparing actual and predicted values across models, the RMSE values vary, indicating the effectiveness of each model.
+   - Choosing the best model depends on the balance between complexity and predictive accuracy.
+
+10. **Overall Insights**:
+    - The high R-squared values in several models suggest good predictive capabilities.
+    - Care should be taken to avoid overfitting, especially in complex models like ANN and RF.
+    - Models like the simpler LM and RF can provide a good balance between accuracy and interpretability.
+
+
+
+```{r}
+trainData <- read_csv("train_data.csv")
+enhanced_linear_model <- lm(Life_expectancy ~ ., data = trainData)
+summary(enhanced_linear_model)
+
+# Calculate Standardized Residuals
+standardized_resids <- rstandard(enhanced_linear_model)
+
+# Create an interactive plot of Standardized Residuals using plotly
+p <- plot_ly(x = seq_along(standardized_resids), y = standardized_resids, type = 'scatter', mode = 'markers') %>%
+  layout(title = "Standardized Residuals",
+         xaxis = list(title = "Index"),
+         yaxis = list(title = "Standardized Residuals"),
+         shapes = list(type = "line", line = list(color = "red", width = 2), x0 = 0, x1 = 1, xref = "paper", y0 = 0, y1 = 0))
+
+# Display the plot
+p
+
+# Cook's Distance
+cooksd <- cooks.distance(enhanced_linear_model)
+
+# Load plotly library
+
+# Determine the threshold for influential points
+influential_threshold <- 4 / (nrow(trainData) - length(coef(enhanced_linear_model)))
+
+# Create an interactive plot of Cook's Distance using plotly
+p <- plot_ly(x = seq_along(cooksd), y = cooksd, type = 'scatter', mode = 'markers') %>%
+  layout(title = "Cook's Distance",
+         xaxis = list(title = "Index"),
+         yaxis = list(title = "Cook's Distance"),
+         shapes = list(type = "line", line = list(color = "red", width = 2), x0 = 0, x1 = 1, xref = "paper", y0 = influential_threshold, y1 = influential_threshold))
+
+# Display the plot
+p
+
+
+# Load the training data
+trainData <- read_csv("train_data.csv")
+
+# Build the enhanced linear model
+enhanced_linear_model <- lm(Life_expectancy ~ ., data = trainData)
+
+# Predict values using the model
+trainData$Predicted <- predict(enhanced_linear_model, trainData)
+
+# Create a ggplot object for Actual vs Predicted values
+actual_vs_predicted_plot <- ggplot(trainData, aes(x = Life_expectancy, y = Predicted)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, color = "red") +
+  labs(title = "Actual vs Predicted Life Expectancy", x = "Actual", y = "Predicted")
+
+# Convert to a Plotly object for interactivity
+actual_vs_predicted_plotly <- ggplotly(actual_vs_predicted_plot)
+
+# Display the interactive plot
+actual_vs_predicted_plotly
+
+## Residuals
+
+# Calculate residuals
+trainData$Residuals <- residuals(enhanced_linear_model)
+
+# Create a ggplot object for Residuals vs Predicted values
+residuals_plot <- ggplot(trainData, aes(x = Predicted, y = Residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Residuals vs Predicted", x = "Predicted", y = "Residuals")
+
+# Convert to a Plotly object for interactivity
+residuals_plotly <- ggplotly(residuals_plot)
+
+# Display the interactive plot
+residuals_plotly
+
+
+### Part C2: Additional Model Training with Train-Test Split
+# Splitting the Data into Train and Test Sets
+
+set.seed(123) # for reproducibility
+index <- createDataPartition(data$Life_expectancy, p = 0.8, list = FALSE) # 80-20 split
+train_data <- data[index, ]
+test_data <- data[-index, ]
+
+# Working with models 1,2,3
+# Data Preparation
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Load and prepare your data (assuming 'data' is already loaded)
+# Split the data into training and validation sets
+indexes <- sample(1:nrow(data), size = 0.8 * nrow(data))
+train_data <- data[indexes, ]
+validation_data <- data[-indexes, ]
+train_data_selected <- dplyr::select(train_data, -Country, -Region)
+
+# Define and fit models
+model_1 <- lm(Life_expectancy ~ . + I(Alcohol_consumption^2), data = train_data_selected)
+model_2 <- lm(Life_expectancy ~ Year + Adult_mortality + Alcohol_consumption + BMI, data = train_data_selected)
+model_3 <- glm(Life_expectancy ~ ., family = gaussian(link = "log"), data = train_data_selected)
+
+
+# Generate predicted values for each model
+predicted_values_1 <- predict(model_1, train_data_selected)
+predicted_values_2 <- predict(model_2, train_data_selected)
+predicted_values_3 <- predict(model_3, train_data_selected)
+
+print(predicted_values_1)
+print(predicted_values_2)
+print(predicted_values_3)
+
+
+# Combine actual and predicted values into a data frame for comparison
+comparison_df <- data.frame(
+  Actual = train_data_selected$Life_expectancy,
+  Predicted_Model_1 = predicted_values_1,
+  Predicted_Model_2 = predicted_values_2,
+  Predicted_Model_3 = predicted_values_3
+)
+summary(comparison_df)
+
+# Convert to long format for plotting
+comparison_long <- comparison_df %>%
+  pivot_longer(cols = starts_with("Predicted"), names_to = "Model", values_to = "Predicted")
+
+# Create and display the plot
+p <- ggplot(comparison_long, aes(x = Actual, y = Predicted, color = Model)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_minimal() +
+  labs(title = "Actual vs Predicted Life Expectancy",
+       x = "Actual Life Expectancy",
+       y = "Predicted Life Expectancy")
+
+# Save the ggplot object as a Plotly plot
+p_plotly <- ggplotly(p)
+htmlwidgets::saveWidget(p_plotly, "comparison_plot.html", selfcontained = TRUE)
+
+
+
+# Function to create a residual plot
+plot_residuals <- function(model, predicted_values, model_name) {
+  data.frame(Predicted = predicted_values, Residuals = residuals(model)) %>%
+    ggplot(aes(x = Predicted, y = Residuals)) +
+    geom_point() +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    theme_minimal() +
+    labs(title = paste("Residuals vs Predicted for", model_name),
+         x = "Predicted Values", y = "Residuals")
+}
+
+# Creating residual plots for each model
+p1 <- plot_residuals(model_1, predicted_values_1, "Model 1")
+p2 <- plot_residuals(model_2, predicted_values_2, "Model 2")
+p3 <- plot_residuals(model_3, predicted_values_3, "Model 3")
+
+# Displaying the plots
+ggplotly(p1)
+ggplotly(p2)
+ggplotly(p3)
+
+
+# VIF for models (note: model_3 requires special handling)
+vif_model_1 <- vif(model_1)
+vif_model_2 <- vif(model_2)
+print(vif_model_1)
+print(vif_model_2)
+
+# Cross-validation for Model 2
+cv_model_2 <- train(Life_expectancy ~ Year + Adult_mortality + Alcohol_consumption + BMI,
+                    data = train_data_selected,
+                    method = "lm",
+                    trControl = trainControl(method = "cv", number = 10))
+print(cv_model_2$results)
+
+
+# Prediction and Evaluation for Model 2 on test data
+predictions_test_2 <- predict(model_2, newdata = validation_data)
+mse_test_2 <- mean((validation_data$Life_expectancy - predictions_test_2)^2)
+rmse_test_2 <- sqrt(mse_test_2)
+print(paste("Test Data RMSE:", rmse_test_2))
+
+# Summaries for model significance
+summary(model_1)
+summary(model_2)
+summary(model_3)
+
+
+# Plotting Actual vs Predicted values for all three models
+p <- ggplot(comparison_df %>%
+              pivot_longer(cols = starts_with("Predicted"), names_to = "Model", values_to = "Predicted"),
+            aes(x = Actual, y = Predicted, color = Model)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_minimal() +
+  labs(title = "Actual vs Predicted Life Expectancy",
+       x = "Actual Life Expectancy",
+       y = "Predicted Life Expectancy")
+
+# Convert ggplot object to plotly for interactive plot
+p_interactive <- ggplotly(p)
+
+# Save the plot as a PNG file
+ggsave("comparison_plot.png", plot = p, width = 10, height = 8)
+
+
+# Plotting Actual vs Predicted values for all three models
+p <- ggplot(comparison_df %>%
+              pivot_longer(cols = starts_with("Predicted"), names_to = "Model", values_to = "Predicted"),
+            aes(x = Actual, y = Predicted, color = Model)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  theme_minimal() +
+  labs(title = "Actual vs Predicted Life Expectancy",
+       x = "Actual Life Expectancy",
+       y = "Predicted Life Expectancy")
+
+ggplotly(p)
+
+
+
+#### Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC)
+## Compute AIC and BIC for Model 1
+aic_model_1 <- AIC(model_1)
+bic_model_1 <- BIC(model_1)
+
+## Compute AIC and BIC for Model 2
+aic_model_2 <- AIC(model_2)
+bic_model_2 <- BIC(model_2)
+
+## Compute AIC and BIC for Model 3
+aic_model_3 <- AIC(model_3)
+bic_model_3 <- BIC(model_3)
+
+## Print the results
+cat("AIC for Model 1:", aic_model_1, "\n")
+cat("BIC for Model 1:", bic_model_1, "\n\n")
+
+cat("AIC for Model 2:", aic_model_2, "\n")
+cat("BIC for Model 2:", bic_model_2, "\n\n")
+
+cat("AIC for Model 3:", aic_model_3, "\n")
+cat("BIC for Model 3:", bic_model_3, "\n")
+```
+
+
+```{r}
+# Machine Learning Models
+# Calculate MSE
+calculateMSE <- function(model, test_data) {
+  predictions <- predict(model, test_data)
+  return(mean((predictions - test_data$Life_expectancy)^2))
+}
+
+# Artificial Neural Network (ANN)
+ann_model <- readRDS("C:/Users/Jessica M/Desktop/project16372/ann_model.rds")
+summary(ann_model)
+
+
+# K Nearest Neighbors (KNN)
+knn_model <- readRDS("C:/Users/Jessica M/Desktop/project16372/knn_model.rds")
+summary(knn_model)
+
+# Support Vector Machine (SVM)
+svm_model <- readRDS("C:/Users/Jessica M/Desktop/project16372/svm_model.rds")
+summary(svm_model)
+
+
+# Random Forest (RF)
+rf_model <- readRDS("C:/Users/Jessica M/Desktop/project16372/rf_model.rds")
+summary(rf_model)
+
+# LM Modelproject16372/
+lm_model <- readRDS("C:/Users/Jessica M/Desktop/project16372/lm_model.rds")
+summary(lm_model)
+
+# Collect and summarize from models
+ML_results <- resamples(list(linear = lm_model, knn = knn_model, ann = ann_model, svm = svm_model, rf = rf_model))
+print(ML_results)
+
+#### Ensure 'Economy_status_Developed' is numeric if it was numeric during model training
+test_data$Economy_status_Developed <- as.numeric(as.factor(test_data$Economy_status_Developed))
+# Then re-run the model evaluation
+mse_ann <- calculateMSE(ann_model, test_data)
+
+
+# Model Evaluation
+# Evaluation Function
+calculateMSE <- function(model, test_data) {
+  predictions <- predict(model, test_data)
+  return(mean((predictions - test_data$Life_expectancy)^2))
+}
+
+# Evaluate Models
+mse_ann <- calculateMSE(ann_model, test_data)
+mse_knn <- calculateMSE(knn_model, test_data) # Update this as per KNN's output format
+mse_svm <- calculateMSE(svm_model, test_data)
+mse_rf <- calculateMSE(rf_model, test_data)
+
+#### Print MSE of Models
+print(list(MSE_ANN = mse_ann, MSE_KNN = mse_knn, MSE_SVM = mse_svm, MSE_RF = mse_rf))
+
+#### Predictions
+#Predictions per model
+actual_values <- test_data$Life_expectancy
+print(actual_values)
+
+#### Predictions
+predictions_ann <- predict(ann_model, test_data)
+predictions_svm <- predict(svm_model, test_data)
+predictions_rf <- predict(rf_model, test_data)
+predictions_knn <- predict(knn_model, test_data)
+predictions_lm <- predict(lm_model, test_data)
+print(predictions_ann)
+print(predictions_svm)
+print(predictions_knn)
+print(predictions_lm)
+print(predictions_rf)
+
+# ML Plots
+## Plot for ANN model
+ggplot() +
+  geom_point(aes(x = actual_values, y = predictions_ann), colour = "blue") +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  labs(title = "ANN Model: Actual vs Predicted", x = "Actual Life Expectancy", y = "Predicted Life Expectancy")
+
+
+# Plot for SVM model
+ggplot() +
+  geom_point(aes(x = actual_values, y = predictions_svm), colour = "green") +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  labs(title = "SVM Model: Actual vs Predicted", x = "Actual Life Expectancy", y = "Predicted Life Expectancy")
+
+
+# Plot for Random Forest Model
+ggplot() +
+  geom_point(aes(x = actual_values, y = predictions_rf), colour = "red") +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  labs(title = "Random Forest Model: Actual vs Predicted", x = "Actual Life Expectancy", y = "Predicted Life Expectancy")
+
+# Plot for KNN Model
+ggplot() +
+  geom_point(aes(x = actual_values, y = predictions_knn), colour = "purple") +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  labs(title = "KNN Model: Actual vs Predicted", x = "Actual Life Expectancy", y = "Predicted Life Expectancy")
+
+# Plot for LRM 
+ggplot() +
+  geom_point(aes(x = actual_values, y = predictions_lm), colour = "orange") +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  labs(title = "Linear Regression Model: Actual vs Predicted", x = "Actual Life Expectancy", y = "Predicted Life Expectancy")
+
+
+# Plot together
+# Combine all predictions into a single data frame
+predictions_df <- data.frame(
+  Actual = actual_values,
+  ANN = predictions_ann,
+  SVM = predictions_svm,
+  RF = predictions_rf,
+  KNN = predictions_knn,
+  LM = predictions_lm
+)
+summary(predictions_df)
+
+# Convert to long format for plotting
+predictions_long <- predictions_df %>%
+  pivot_longer(cols = -Actual, names_to = "Model", values_to = "Predicted")
+
+# Plot all models together
+ggplot(predictions_long, aes(x = Actual, y = Predicted, colour = Model)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  labs(title = "All Models: Actual vs Predicted", x = "Actual Life Expectancy", y = "Predicted Life Expectancy") +
+  theme_minimal() +
+  scale_colour_manual(values = c("blue", "green", "red", "purple", "orange"))
+
+# Plot Ml together
+predictions_df <- data.frame(
+  Actual = actual_values,
+  ANN = predictions_ann,
+  SVM = predictions_svm,
+  RF = predictions_rf,
+  KNN = predictions_knn,
+  LM = predictions_lm
+)
+
+ggplot(predictions_long, aes(x = Actual, y = Predicted, colour = Model)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  labs(title = "All Models: Actual vs Predicted", x = "Actual Life Expectancy", y = "Predicted Life Expectancy") +
+  theme_minimal() +
+  scale_colour_manual(values = c("blue", "green", "red", "purple", "orange"))
+
+
+# Convert to long format for plotting
+predictions_long <- predictions_df %>%
+  pivot_longer(cols = c("ANN", "SVM", "RF", "KNN", "LM"), names_to = "Model", values_to = "Predicted")
+
+
+
+#### Evaluation RMSE
+calculateRMSE <- function(model, test_data) {
+  predictions <- predict(model, test_data)
+  mse <- mean((predictions - test_data$Life_expectancy)^2)
+  return(sqrt(mse))
+}
+
+# Evaluate Models to get RMSE
+rmse_ann <- calculateRMSE(ann_model, test_data)
+rmse_knn <- calculateRMSE(knn_model, test_data) # Update this as per KNN's output format
+rmse_svm <- calculateRMSE(svm_model, test_data)
+rmse_rf <- calculateRMSE(rf_model, test_data)
+rmse_lm <- calculateRMSE(lm_model, test_data) # Assuming lm_model is already fitted using train_data
+
+# Create a data frame with all RMSE values
+rmse_data <- data.frame(
+  Model = c("ANN", "KNN", "SVM", "RF", "LM"),
+  RMSE = c(rmse_ann, rmse_knn, rmse_svm, rmse_rf, rmse_lm)
+)
+summary(rmse_data)
+
+#### Box and Whisker Plot
+results <- resamples(list(linear = lm_model, knn = knn_model, ann = ann_model, svm = svm_model, rf = rf_model))
+print(results)
+bwplot(results, metric = "RMSE")
+```
+
+
+# Part D: Splitting into Training & Validation
+
+This part of the analysis focuses on preparing the dataset for predictive modeling by splitting it into training and validation sets. This is a crucial step in any data analysis project as it allows for the validation of model performance on unseen data.
+
+## Data Splitting Process
+- **Objective**: To divide the dataset into two parts; one for training the model and the other for validating its performance.
+- **Method Used**: The data is split using the `createDataPartition` function from the `caret` package in R, ensuring a balanced distribution of the target variable, `Life_expectancy`, in both sets.
+- **Seed Setting**: `set.seed(123)` is used for reproducibility, ensuring that the same random split can be generated again if needed.
+
+## Training Data
+- **Description**: The training data is used to build and train the predictive models. It consists of a larger portion of the dataset to provide the models with ample data to learn from.
+- **Size of Training Data**: From the original dataset, 70% is allocated to the training set.
+- **Training Data Snapshot**:
+  - A tibble with 1,996 rows and 23 columns.
+  - Includes a diverse range of variables such as `Country`, `Region`, `Year`, `Economy_status_Developed`, `Adult_mortality`, and others.
+
+## Validation Data
+- **Purpose**: This subset is used to validate the performance of the trained models. It acts as new, unseen data for the models to make predictions.
+- **Size of Validation Data**: The remaining 30% of the dataset is used as validation data.
+- **Validation Data Snapshot**:
+  - A tibble with 852 rows and 23 columns.
+  - Mirrors the structure of the training data, ensuring consistency in variable types and ranges.
+
+## Summary
+The dataset has been successfully split into training and validation sets, maintaining a balance in the distribution of the target variable. This split is essential for developing robust predictive models and evaluating their performance accurately.
+
+
+
+
+
+```{r}
+# 1. Splitting the Data: Split data into training and validation sets. 
+set.seed(123) # For reproducibility
+index <- createDataPartition(data$Life_expectancy, p = 0.7, list = FALSE)
+train_data <- data[index, ]
+validation_data <- data[-index, ]
+print(validation_data)
+print(train_data)
+```
+
+# Part E: Recursive Feature Elimination (RFE) and Model Building
+This section focuses on using Recursive Feature Elimination (RFE) with a random forest model to select important features and build predictive models.
+
+## Comprehensive Analysis on Part E:
+
+1. **Data Loading and Overview**:
+   - The data (`trainData`) is loaded from a CSV file, containing 1,996 rows and 24 columns.
+   - The columns include a mix of character (`chr`) and double (`dbl`) types, covering various demographic and health-related metrics.
+
+2. **Recursive Feature Elimination (RFE) Process**:
+   - RFE is used to identify the most significant features that influence life expectancy. This method iteratively removes the least important features to find the best subset for prediction.
+   - Random forest is chosen as the feature selection method within RFE. This is a robust method considering it's good at handling both linear and non-linear relationships and can deal with high-dimensional data.
+   - The `rfeControl` function with cross-validation (`cv`) and 10 folds is set for the RFE process. Cross-validation helps in assessing the model's generalizability.
+
+3. **Selected Features**:
+   - The RFE process results in the selection of 21 features out of the original set. These include factors like `Adult_mortality`, `Infant_deaths`, `Alcohol_consumption`, country-specific indicators, and others.
+   - Notably, both direct health indicators (like `Adult_mortality`, `BMI`, `Diphtheria`) and socio-economic factors (`GDP_per_capita`, `Schooling`) are included, reflecting the multidimensional nature of life expectancy determinants.
+
+4. **Linear Regression Model**:
+   - A linear regression model (`simple_model`) is then built using the selected features.
+   - The model summary provides coefficients for each feature, which represent the estimated change in life expectancy for a one-unit change in the feature, holding all other features constant.
+   - The coefficients show a mix of positive and negative relationships. For example, increases in `Adult_mortality` and `Infant_deaths` are associated with decreases in life expectancy.
+   - `Year` has a positive coefficient, suggesting an overall improvement in life expectancy over time.
+   - The p-values indicate the statistical significance of each feature's relationship with life expectancy. Features with p-values below a typical alpha level (e.g., 0.05) are considered statistically significant.
+
+5. **Interpretation of Coefficients**:
+   - The large number of country-specific coefficients (dummy variables) suggests that geographical factors significantly influence life expectancy, likely due to differences in healthcare, lifestyle, and socio-economic conditions.
+   - Some coefficients are not defined due to singularities, possibly indicating multicollinearity issues where some variables are highly correlated with each other.
+
+6. **Model Evaluation**:
+   - The residuals of the model (difference between observed and predicted life expectancy) indicate the model's fit. A median close to zero suggests a good central tendency in predictions.
+   - However, the presence of significant residuals (Min, Max) suggests that there might be instances where the model does not predict accurately, indicating potential for model improvement.
+
+7. **Considerations for Improvement**:
+   - Addressing multicollinearity by removing or combining highly correlated variables could improve the model.
+   - Testing interaction effects or non-linear relationships could provide a more nuanced understanding.
+   - Validating the model on a separate test set would be crucial to assess its predictive accuracy.
+   
+
+8. **Model Summary and Performance**:
+   - The initial simple linear regression model (`simple_model`) has a very high Multiple R-squared value (0.9971), indicating that the model explains almost all the variability in the response data around its mean. However, such a high value might also hint at overfitting.
+   - Three enhanced models were built for comparison: a model with polynomial terms (`model_1`), a reduced model with fewer predictors (`model_2`), and a generalized linear model with a logarithmic link (`model_3`).
+
+9. **Enhanced Models Analysis**:
+   - `Model_1` incorporates a quadratic term for `Alcohol_consumption`. It has a similar performance to the `simple_model`, suggesting that adding the quadratic term doesn't significantly change the model's explanatory power.
+   - `Model_2` focuses on key variables (`Year`, `Adult_mortality`, `Alcohol_consumption`, `BMI`). It understandably has a lower R-squared value (0.927) compared to the full model, indicating a reduction in explanatory power but potentially better generalizability.
+   - `Model_3` (GLM with log link) also shows a strong fit, but it's important to check if the assumptions of GLM are met in this case.
+
+10. **Model Diagnostics and Residual Analysis**:
+   - The influence plot and residuals plots are crucial for understanding model diagnostics. High Cook's Distance values in the influence plot indicate influential observations that might unduly affect the model's predictions.
+   - The residuals vs. fitted values plot should ideally show no discernible pattern. Patterns might suggest non-linearity, heteroscedasticity, or outliers.
+   - The histogram and Q-Q plot of residuals are used to check the normality assumption. In the ideal scenario, residuals should be normally distributed (bell-shaped histogram and points following the line in the Q-Q plot).
+
+11. **Model Comparison and Selection**:
+   - ANOVA results are used to compare models statistically. A significant difference in the residual sum of squares between models suggests one model may be better than the other.
+   - Cross-validation results (RMSE, R-squared) can also be used to compare models. Lower RMSE and higher R-squared values on cross-validation suggest a model that generalizes better.
+
+12 **Multicollinearity Check**:
+   - High VIF (Variance Inflation Factor) values indicate multicollinearity, which can make coefficients unstable and difficult to interpret. It's important to address this by possibly removing or combining correlated predictors.
+
+13. **Visualization and Interpretation**:
+   - Plots comparing actual vs. predicted life expectancy help visually assess model performance. Closer alignment of predicted values with actual ones indicates better model performance.
+   - The scatter plots, histograms, and Q-Q plots provide a visual means to assess model assumptions and fit, enhancing the statistical interpretation.
+
+In conclusion, while the models demonstrate strong predictive power, careful consideration of overfitting, influence of outliers, and the fulfillment of model assumptions is necessary. The choice of model should balance complexity and generalizability, and diagnostics plots play a crucial role in this decision-making process.
+
+In summary, the RFE process successfully identified key variables influencing life expectancy, and the linear regression model built with these variables provides insights into the nature of these relationships. However, there are opportunities for further refining and validating the model to enhance its predictive power.
+
+```{r}
+# Load the data
+trainData <- read_csv("train_data.csv")
+
+# Define control for RFE using a random forest selection function
+control <- rfeControl(functions=rfFuncs, method="cv", number=10)
+
+# Run RFE with Random Forest Model
+# Perform the RFE to identify the most significant features for predicting life expectancy
+# Specifying the outcome and predictors
+results <- rfe(x=train_data[, -which(names(train_data) == "Life_expectancy")], 
+               y=train_data$Life_expectancy, 
+               sizes=c(1:5),  
+               rfeControl=control)
+
+# Extract the best subset of variables
+selected_features <- results$optVariables
+print(selected_features)
+
+# Use only these selected features for model training
+train_data_selected <- trainData[, c(selected_features, "Life_expectancy")]
+
+# Simple Linear Regression Model
+simple_model <- lm(Life_expectancy ~ ., data = train_data_selected)
+summary(simple_model)
+
+# Influence PLot
+influencePlot(simple_model, id.method="identify", main="Influence Plot", 
+              sub="Circle size is proportional to Cook's Distance")
+
+# Enhanced Model Plots : Model 1, Model 2, Model 3
+# Model 1  Enhanced Model with Polynomial Terms
+enhanced_model <- lm(Life_expectancy ~ . + I(Alcohol_consumption^2), data = train_data_selected)
+model_1 <- (enhanced_model)
+summary(model_1)
+
+# Model 2 Enhanced LRM with Predictors (Model 2)
+model_2 <- lm(Life_expectancy ~ Year + Adult_mortality + Alcohol_consumption + BMI, data = train_data_selected)
+summary(model_2)
+
+# Model 3 Generalized Linear Model with Log Link
+glm_model <- glm(Life_expectancy ~ ., family = gaussian(link = "log"), data = train_data_selected)
+model_3 <- (glm_model)
+summary(model_3)
+
+ 
+# Convert to long format for plotting
+comparison_long <- comparison_df %>%
+  pivot_longer(cols = starts_with("Predicted"), names_to = "Model", values_to = "Predicted")
+
+# Load the training data
+trainData <- read_csv("train_data.csv")
+
+# Generate predicted values
+predicted_values_1 <- predict(model_1, trainData)
+predicted_values_2 <- predict(model_2, trainData)
+predicted_values_3 <- predict(model_3, trainData)
+
+# Combine actual and predicted values into a data frame
+comparison_df <- data.frame(
+  Actual = trainData$Life_expectancy,
+  Predicted_Model_1 = predicted_values_1,
+  Predicted_Model_2 = predicted_values_2,
+  Predicted_Model_3 = predicted_values_3
+)
+
+# Convert to long format for plotting
+comparison_long <- comparison_df %>%
+  pivot_longer(cols = starts_with("Predicted"), names_to = "Model", values_to = "Predicted")
+
+# Create the plot
+p123 <- comparison_long %>%
+  plot_ly(x = ~Actual, y = ~Predicted, color = ~Model, type = 'scatter', mode = 'markers') %>%
+  layout(title = "Actual vs Predicted Life Expectancy",
+         xaxis = list(title = "Actual Life Expectancy"),
+         yaxis = list(title = "Predicted Life Expectancy"),
+         hovermode = "compare")
+
+# Display the plot
+p123
+
+
+# Model Evaluation and Comparison
+# ANOVA for Model Comparison
+anova_result_1 <- anova(simple_model, enhanced_model)
+print(anova_result_1)
+anova_result_2 <- anova(simple_model, model_2)
+print(anova_result_2)
+
+
+# Cross-Validation for Model Selection
+control_cv <- trainControl(method = "cv", number = 10)  # 10-fold CV
+cv_model <- train(Life_expectancy ~ ., data = train_data_selected, method = "lm", trControl = control_cv)
+print(cv_model)
+
+# Ensure only numeric data is used for correlation
+numeric_data <- train_data_selected %>% dplyr::select_if(is.numeric)
+
+# Define control for cross-validation
+control_cv <- trainControl(method = "cv", number = 10)
+
+# Train the model using cross-validation
+cv_model <- train(Life_expectancy ~ ., data = numeric_data, method = "lm", trControl = control_cv)
+print(cv_model)
+
+
+#  Checking Multicollinearity with VIF
+# Select only numeric predictors including Life_expectancy
+numeric_predictors <- train_data_selected %>%
+  dplyr::select_if(is.numeric)
+
+# Build the model
+simple_model <- lm(Life_expectancy ~ ., data = numeric_predictors)
+
+# Calculate VIF
+vif_values <- vif(simple_model)
+
+# Save VIF values to a variable for later use
+saved_vif_values <- vif_values
+
+# Analyze VIF values
+print(saved_vif_values)
+
+
+# Enhanced Model Plots : Model 1, Model 2, Model 3
+# Model 1  Enhanced Model with Polynomial Terms
+enhanced_model <- lm(Life_expectancy ~ . + I(Alcohol_consumption^2), data = train_data_selected)
+model_1 <- (enhanced_model)
+summary(model_1)
+
+#  Model 2 Enhanced LRM with Predictors (Model 2)
+model_2 <- lm(Life_expectancy ~ Year + Adult_mortality + Alcohol_consumption + BMI, data = train_data_selected)
+summary(model_2)
+
+# Model 3 Generalized Linear Model with Log Link
+glm_model <- glm(Life_expectancy ~ ., family = gaussian(link = "log"), data = train_data_selected)
+model_3 <- (glm_model)
+summary(model_3)
+
+
+# Plot Models 1,2,3
+
+# Convert to long format for plotting
+comparison_long <- comparison_df %>%
+  pivot_longer(cols = starts_with("Predicted"), names_to = "Model", values_to = "Predicted")
+# Load the training data
+trainData <- read_csv("train_data.csv")
+
+
+# Generate predicted values
+predicted_values_1 <- predict(model_1, trainData)
+predicted_values_2 <- predict(model_2, trainData)
+predicted_values_3 <- predict(model_3, trainData)
+
+# Combine actual and predicted values into a data frame
+comparison_df <- data.frame(
+  Actual = trainData$Life_expectancy,
+  Predicted_Model_1 = predicted_values_1,
+  Predicted_Model_2 = predicted_values_2,
+  Predicted_Model_3 = predicted_values_3
+)
+
+# Convert to long format for plotting
+comparison_long <- comparison_df %>%
+  pivot_longer(cols = starts_with("Predicted"), names_to = "Model", values_to = "Predicted")
+
+# Create the plot
+p123 <- comparison_long %>%
+  plot_ly(x = ~Actual, y = ~Predicted, color = ~Model, type = 'scatter', mode = 'markers') %>%
+  layout(title = "Actual vs Predicted Life Expectancy",
+         xaxis = list(title = "Actual Life Expectancy"),
+         yaxis = list(title = "Predicted Life Expectancy"),
+         hovermode = "compare")
+
+# Display the plot
+p123
+saveRDS(p123, file = "plot123.rds")
+save(p123, file = "plot123.RData")
+
+
+# Residual Analysis and Diagnostics Plots
+
+
+# Residuals vs Fitted Values 
+
+predicted_values <- predict(simple_model, train_data_selected)
+residuals <- residuals(simple_model)
+
+
+# Interactive Residuals vs Fitted Values Plot
+
+p_residuals_fitted <- plot_ly(x = predicted_values, y = residuals, type = 'scatter', mode = 'markers') %>%
+  layout(title = 'Residuals vs Fitted Values',
+         xaxis = list(title = 'Fitted Values'),
+         yaxis = list(title = 'Residuals')) %>%
+  add_lines(x = predicted_values, y = rep(0, length(residuals)), line = list(color = 'red'))
+
+# Display the interactive plot
+p_residuals_fitted
+
+
+# Normality of Residuals: Histogram
+
+p_hist_residuals <- plot_ly(x = residuals, type = 'histogram', nbinsx = 30) %>%
+  layout(title = 'Histogram of Residuals',
+         xaxis = list(title = 'Residuals'),
+         yaxis = list(title = 'Count'))
+
+# Display the histogram
+p_hist_residuals
+
+# Normality of Residuals: Q-Q Plot
+
+qq <- qqnorm(residuals, plot.it = FALSE)
+p_qq_residuals <- plot_ly(x = qq$x, y = qq$y, type = 'scatter', mode = 'markers') %>%
+  layout(title = 'Q-Q Plot of Residuals',
+         xaxis = list(title = 'Theoretical Quantiles'),
+         yaxis = list(title = 'Sample Quantiles')) %>%
+  add_lines(x = qq$x, y = qq$x, line = list(color = 'red'))
+
+# Display the Q-Q plot
+p_qq_residuals
+
+```
+
+## Part F: AIC
+The Akaike Information Criterion (AIC) is a tool used to assess the quality of statistical models for a given dataset. It balances the complexity of the model against how well the model fits the data. A lower AIC value generally indicates a better model, as it suggests a model that explains a high degree of variability in the data without unnecessary complexity.
+
+Let's analyze the AIC values for each of the models:
+
+1. **Simple Linear Regression Model (`simple_model`)**:
+   - AIC: 7096.756
+   - This is a baseline model with a relatively high AIC, suggesting it might be more complex or fit the data less effectively compared to others.
+
+2. **Enhanced Linear Regression Model (`enhanced_model`)**:
+   - AIC: 3310.982
+   - This model has a significantly lower AIC compared to the simple model, indicating a better balance of model fit and complexity. It might be the preferred model based on AIC.
+
+3. **Reduced Linear Regression Model (`model_2`)**:
+   - AIC: 9382.416
+   - The high AIC value suggests that while this model is simpler (fewer predictors), it may not fit the data as well as other models.
+
+4. **Generalized Linear Model with Log Link (`glm_model`)**:
+   - AIC: 3386.137
+   - This AIC is slightly higher than that of the enhanced model but still lower than the simple model, indicating reasonable model performance.
+
+5. **Robust Linear Regression Model (`robust_model`)**:
+   - AIC: 10195.21
+   - This model has the highest AIC value among the ones compared, suggesting it might be the least preferable in terms of the balance between data fit and complexity.
+
+In summary, based on AIC values, the `enhanced_model` appears to be the most effective in balancing data fit and model simplicity. It's important to remember that while AIC is a useful criterion for model comparison, it should be considered alongside other diagnostic measures and domain-specific considerations to choose the most appropriate model for your analysis.
+
+
+```{r}
+#reduced model
+reduced_model <- lm(Life_expectancy ~ Adult_mortality + Year + BMI, data = train_data_selected)
+summary(reduced_model)
+
+
+library(car)
+vif_results <- vif(reduced_model)
+print(vif_results)
+
+library(glmnet)
+# Standardize variables for regularization
+x <- model.matrix(Life_expectancy ~ ., data = train_data_selected)[,-1]
+y <- train_data_selected$Life_expectancy
+
+# Fit Ridge Regression Model
+ridge_model <- cv.glmnet(x, y, alpha = 0)
+plot(ridge_model)
+
+# Residuals vs Fitted
+plot(reduced_model, which = 1)
+
+# Scale-Location (Spread-Location)
+plot(reduced_model, which = 3)
+
+# Residuals vs Leverage
+plot(reduced_model, which = 5)
+
+
+library(boot)
+set.seed(123) # for reproducibility
+cv_results <- cv.glm(data = train_data_selected, glmfit = reduced_model, K = 10) # 10-fold CV
+print(cv_results$delta) # delta contains cross-validated results
+```
+
+```{r{}
+mancova_results <- manova(cbind(Life_expectancy, Adult_mortality, Alcohol_consumption) ~ Economy_status_Developed + Year, data = train_data)
+summary(mancova_results, test = "Pillai")
+```
+
+
+
+
+# Summarizing Finding:
+Based on the validation set metrics, here's a concise summary and interpretation of the performance of the three models:
+
+1. **Model 1**:
+   - **RMSE:** 0.6048335
+   - **MAE:** 0.393135
+   - **Interpretation:** Exhibits the best performance with the lowest RMSE and MAE, indicating high accuracy and fewer average errors in predicting life expectancy.
+
+2. **Model 2**:
+   - **RMSE:** 2.488072
+   - **MAE:** 1.873971
+   - **Interpretation:** Shows significantly poorer performance with much higher RMSE and MAE, suggesting it is less effective in accurately predicting life expectancy.
+
+3. **Model 3**:
+   - **RMSE:** 0.6331086
+   - **MAE:** 0.4011408
+   - **Interpretation:** Performs slightly less accurately than Model 1 but still demonstrates reasonable effectiveness.
+
+**Model Selection Considerations**:
+- **Model 1** is the most accurate. However, balance this accuracy with considerations of model complexity and interpretability.
+- If **Model 1** is much more complex or less interpretable than **Model 3**, and the performance difference is marginal, **Model 3** could be a viable alternative, depending on specific project needs.
+- **Model 2** may require revision or a different approach due to its lower accuracy.
+
+**Final Steps for Model Selection**:
+- Select the best model based on a combination of accuracy, complexity, and interpretability.
+- Conduct a final review of model diagnostics, ensuring all assumptions (like normality of residuals, homoscedasticity, etc.) are met.
+- Address any specific issues such as multicollinearity, especially in Model 1, as indicated by its warning message about a "rank-deficient fit."
+- Once a model is chosen and confirmed to meet all criteria and assumptions, it can be finalized for deployment or further application in the project.
+**Decision Making**:
+- Given these metrics, **Model 1** appears to be the best model among the three in terms of prediction accuracy on the validation set.
+- However, we need to balance model accuracy with complexity and interpretability. If Model 1 is considerably more complex or harder to interpret than Model 3, and the difference in RMSE/MAE is marginal, Model 3 could still be a viable option
+
+**Final Steps**:
+- Select Best Model - Based on everthing, Model_1 is the best model for this analysis. 
+
+The influence plot demonstrates standardized residuals versus leverage for each data point, with circle size indicating Cook's distance. This tool identifies influential points in model fitting.
+
+**Key Aspects of the Influence Plot**:
+
+1. **Leverage**: Data points far right on the x-axis have high leverage, potentially impacting the regression line. These points typically possess extreme predictor values.
+
+2. **Standardized Residuals**: Points distant from 0 on the y-axis indicate large residuals, signifying prediction inaccuracy. These are outliers.
+
+3. **Cook's Distance**: Larger circles symbolize greater influence. Points with Cook's distance over 1 might excessively affect model predictions.
+
+**Notable Observations**:
+
+- **High Leverage Points**: Positioned far right, potentially disproportionately influencing regression coefficients.
+  
+- **Outliers**: Exhibiting high residuals, indicating poor model fit.
+
+- **Influential Points**: Identified by large circles, such as points 602, 801, 1045.
+
+**Strategies for Analysis**:
+
+- Investigate outliers and high leverage points for errors or rare but valid conditions.
+  
+- Assess whether to remove influential points that may skew the model.
+
+- Refit the model if necessary, ensuring it still meets key assumptions.
+
+**Cross-Validation Plot for Ridge Regression**:
+
+This plot, generated by `cv.glmnet` in R, uses k-fold cross-validation for selecting lambda in ridge regression.
+
+**Plot Components**:
+
+1. **X-axis (Log(λ))**: Displays the log of lambda values tested. Lambda controls shrinkage of coefficients.
+
+2. **Y-axis (Mean Squared Error)**: Shows the MSE for each lambda, with lower MSE indicating better performance.
+
+3. **Error Bars**: Represent the standard error range for each lambda's cross-validation error.
+
+4. **Red Dots**: Average cross-validation error for each lambda.
+
+5. **Solid Line**: Traces the error trajectory as lambda changes.
+
+6. **Vertical Dashed Lines**: Indicate optimal lambda (`lambda.min`) and a more conservative choice (`lambda.1se`).
+
+**Interpretation**:
+
+- Choose `lambda.min` for lowest prediction error.
+  
+- `lambda.1se` offers a simpler model at a slightly higher error.
+
+In the given plot, `lambda.min` is at the curve's lowest point, extractable from the `cv.glmnet` object.
+
+**Model Evaluation for Predicting Life Expectancy**:
+
+1. **Model 1**: Best predictive accuracy with lowest RMSE and MAE.
+
+2. **Model 2**: Least accurate, suggested by higher RMSE and MAE.
+
+3. **Model 3**: Slightly less accurate than Model 1 but still effective.
+
+In summary, Model 1 appears most effective for this task, with a need to address its potential multicollinearity issues.
+# Summarizing Findings
+
+Based on the validation set metrics for all three models, we can now compare their performance. Here are the results summarized:
+
+## Model 1
+   - **RMSE:** 0.6048335
+   - **MAE:** 0.393135
+
+## Model 2
+   - **RMSE:** 2.488072
+   - **MAE:** 1.873971
+
+## Model 3
+   - **RMSE:** 0.6331086
+   - **MAE:** 0.4011408
+
+### Model Comparison and Selection
+- **Model 1** has the lowest RMSE and MAE, suggesting it predicts life expectancy more accurately and with fewer errors on average compared to the other two models.
+- **Model 2** shows significantly higher RMSE and MAE, indicating it might not be as effective in predicting life expectancy as the other models.
+- **Model 3** has slightly higher RMSE and MAE than Model 1, but these are still reasonably low.
+
+### Decision Making
+- Given these metrics, **Model 1** appears to be the best model among the three in terms of prediction accuracy on the validation set.
+- However, remember to balance model accuracy with complexity and interpretability. If Model 1 is considerably more complex or harder to interpret than Model 3, and the difference in RMSE/MAE is marginal, Model 3 could still be a viable option depending on your project's needs.
+- Ensure that the chosen model aligns well with the specific objectives and constraints of your analysis.
+
+### Final Steps
+- After selecting model_1 we performed  a final review of model diagnostics to ensure it meets all assumptions (like normality of residuals, homoscedasticity, etc.).
+- There is no "perfect mode;"  but from all the testing, it seems model 1 is the best.  
+
+
+
